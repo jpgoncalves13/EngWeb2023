@@ -92,4 +92,4 @@ pagHTML += """
 </html>
 """
 
-print(pagHTML)
+open("mapa.html", "w").write(pagHTML)
