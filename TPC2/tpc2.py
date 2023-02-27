@@ -44,7 +44,7 @@ for c in cidades:
 
 
 
-open("index.html", "w").write(index)
+open("./Pages/index.html", "w").write(index)
 i = 0
 
 pagHTML = """"""
@@ -74,7 +74,7 @@ for c in cidades:
                                 </li>
             """
     i = i+1
-    wr = "c" + str(i) + ".html"
+    wr = "./Pages/" + "c" + str(i) + ".html"
     open(wr,"w").write(pagHTML)
     pagHTML=""
 
