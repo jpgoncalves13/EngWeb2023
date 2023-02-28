@@ -37,12 +37,10 @@ for c in cidades:
     cidades_aux[c["id"]] = c
     index += f"""
     <li>
-        <a href="#{c["id"]}">{c["nome"]}</a>
+        <a href="{c["id"]}">{c["nome"]}</a>
     </li>
     """
-
-
-
+    
 
 open("./Pages/index.html", "w").write(index)
 i = 0
@@ -50,6 +48,7 @@ i = 0
 pagHTML = """"""
 
 for c in cidades:
+    i = i+1
     pagHTML += f"""
                     <a name="{c["id"]}"/>
                     <h3>{c["nome"]}</h3>
@@ -64,17 +63,16 @@ for c in cidades:
         if l["origem"] == c["id"]:
             pagHTML += f"""
                                 <li>
-                                    <a href="#{l["destino"]}">{cidades_aux[l["destino"]]["nome"]}</a> - {l["distância"]} km
+                                    <a href="{l["destino"]}">{cidades_aux[l["destino"]]["nome"]}</a> - {l["distância"]} km
                                 </li>
             """
         elif l["destino"] == c["id"]:
             pagHTML += f"""
                                 <li>
-                                    <a href="#{l["origem"]}">{cidades_aux[l["origem"]]["nome"]}</a> - {l["distância"]} km
+                                    <a href="{l["origem"]}">{cidades_aux[l["origem"]]["nome"]}</a> - {l["distância"]} km
                                 </li>
             """
-    i = i+1
-    wr = "./Pages/" + "c" + str(i) + ".html"
+    wr = "./Pages/" + c["id"] + ".html"
     open(wr,"w").write(pagHTML)
     pagHTML=""
 
