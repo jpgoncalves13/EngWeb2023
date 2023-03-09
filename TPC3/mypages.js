@@ -23,7 +23,6 @@ exports.genMainPage = function(lista, data){
                 <div class="w3-container">
                     <table class="w3-table-all">
                     <tr>
-                        <th>ID</th>
 
                         <th>Nome</th>
 
@@ -44,7 +43,7 @@ exports.genMainPage = function(lista, data){
         pagHTML += `
         <tr>
             <td>
-                <a href="/pessoas/${lista[i].id}"><td>${lista[i].nome}</a>
+                <a href="/pessoas/${lista[i].id}">${lista[i].nome}</a>
             </td>
             <td>${lista[i].idade}</td>
 
@@ -94,7 +93,23 @@ exports.genPersonPage = function(p, d){
                     <h1>${p.nome}</h1>
                 </header>
             <div class"container">
-                <p>Preencher com os outros campos</p>
+            <table class="w3-table-all">
+                    <tr>
+                        <th>Idade</th>
+                        <th>Sexo</th>
+                        <th>Cidade</th>
+                        <th>Desportos</th>
+                        <th>Profissão</th>
+                    </tr>
+                    <tr>
+                        <td>${p.idade}</td>
+                        <td>${p.sexo}</td>
+                        <td>${p.morada.cidade}</td>
+                        <td>${p.desportos}</td>
+                        <td>${p.profissao}</td>
+                    </tr>
+                </table>
+
             </div>
 
                 <footer class="w3-container w3-blue">
@@ -109,7 +124,7 @@ exports.genPersonPage = function(p, d){
     return pagHTML
 }
 
-exports.genDistSexPage = function(dist, d){
+exports.genDistSexPage = function(dist, d, ref){
     pagHTML =`
     <!DOCTYPE html>
 
@@ -142,7 +157,7 @@ exports.genDistSexPage = function(dist, d){
             </td>
 
             <td>
-            ${dist[genre]}
+            <a href="/${ref}/${genre}">${dist[genre]}</a>
             </td>
         </tr>
         `
@@ -164,7 +179,7 @@ exports.genDistSexPage = function(dist, d){
     return pagHTML
 }
 
-exports.genDistSport = function(dist, d){
+exports.genDistSport = function(dist, d, ref){
     pagHTML =`
     <!DOCTYPE html>
 
@@ -198,7 +213,7 @@ exports.genDistSport = function(dist, d){
             </td>
 
             <td>
-            ${dist[keys[i]]}
+            <a href="/${ref}/${keys[i]}">${dist[keys[i]]}</a>
             </td>
         </tr>
         `
@@ -220,7 +235,7 @@ exports.genDistSport = function(dist, d){
     return pagHTML
 }
 
-exports.genDistProfissao = function(dist, d) {
+exports.genDistProfissao = function(dist, d, ref) {
     pagHTML =`
     <!DOCTYPE html>
 
@@ -258,7 +273,7 @@ exports.genDistProfissao = function(dist, d) {
             </td>
 
             <td>
-            ${top10[key]}
+            <a href="/${ref}/${key}">${top10[key]}</a>
             </td>
         </tr>
         `
