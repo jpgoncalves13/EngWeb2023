@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Guilherme Varela"
+    },
+    {
+      "id": "2",
+      "name": "Gabriela Cunha"
+    },
+    {
+      "id": "3",
+      "name": "Tone Alves"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "duedate": "10/03/2023",
+      "who": "2",
+      "description": "Entrega de computação gráfica",
+      "done": true
+    },
+    {
+      "id": "2",
+      "duedate": "7/05/2023",
+      "who": "1",
+      "description": "Enterro da gata",
+      "done": false
+    }
+  ]
+}
