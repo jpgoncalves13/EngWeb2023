@@ -1,4 +1,4 @@
-// alunos_server.js
+// form_server.js
 // RPCW2023: 2023-03-05
 // by jcr
 
@@ -32,10 +32,10 @@ function getTasks(){
             test = axios.get("http://localhost:3000/users")
                 .then(response => {
                     var users = response.data
-
+                    
                     var users_dict = {}
                     for(let user of users){
-                        users_dict[user.id] = user
+                        users_dict[user.id] = user    
                     }
 
                     for(let task of tasks){
@@ -53,7 +53,7 @@ function getTasks(){
                             to_be_done.push(task)
                         }
                     }
-
+                    
                     return [already_done, to_be_done]
                 })
                 .catch(function(erro){
@@ -64,7 +64,7 @@ function getTasks(){
         })
         .catch(function(erro){
             console.log(erro)
-        })
+        })             
 }
 
 // Server creation
@@ -80,66 +80,50 @@ var alunosServer = http.createServer(function (req, res) {
     }
     else{
         switch(req.method){
-            case "GET":
-                getTasks()
-                    .then(tasks => {
-                        let test = [1, 2, 3]
-                        console.log(test)
-                        console.log(tasks[0])
-                    })
-                // GET /alunos --------------------------------------------------------------------
+            case "GET": 
                 if(req.url == "/"){
                     getTasks()
                         .then(tasks => {
                             res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                            res.write(templates.indexPage(tasks[0], tasks[1], false, false, false, d))
+                            res.write(templates.indexPage(tasks[0], tasks[1], null, false, false, false, false, d))
                             res.end()
                         })
                         .catch(function(erro){
                             console.log(erro)
-                        })
+                        })   
                 }
-                // GET /alunos/:id --------------------------------------------------------------------
-                else if(/\/alunos\/(A|PG)[0-9]+$/i.test(req.url)){
-                    var idAluno = req.url.split("/")[2]
-                    axios.get("http://localhost:3000/alunos/" + idAluno)
-                        .then( response => {
-                            let a = response.data
-                            // Add code to render page with the student record
-                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                            res.end(templates.studentPage(a, d))
-                        })
-                }
-                // GET /alunos/registo --------------------------------------------------------------------
                 else if(req.url == "/insertTask"){
                     getTasks()
                         .then(tasks => {
                             res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                            res.write(templates.indexPage(tasks[0], tasks[1], true, false, false, d))
+                            res.write(templates.indexPage(tasks[0], tasks[1], null, true, false, false, false, d))
                             res.end()
                         })
                         .catch(function(erro){
                             console.log(erro)
-                        })
+                        })   
                 }
-                // GET /alunos/edit/:id --------------------------------------------------------------------
                 else if(/\/editTask\/.*$/i.test(req.url)){
                     // Get aluno record
                     var idTask = req.url.split("/")[2] // pegar o id do aluno
+                    
+                    getTasks()
+                        .then(tasks => {
+                            axios.get('http://localhost:3000/tasks/' + idTask)
+                                .then(response =>{
+                                    var task_to_edit = response.data
 
-                    axios.get('http://localhost:3000/alunos/' + idAluno)
-                    .then(function(resp){
-                        var aluno = resp.data
-
-                        res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                        res.end(templates.studentFormEditPage(aluno, d))
-                    })
-                    .catch(erro => {
-                        console.log("Erro: " + erro)
-
-                        res.writeHead(404, {'Content-Type': 'text/html;charset=utf-8'})
-                        res.end(templates.errorPage("Unable to collect record: " + idAluno, d))
-                    })
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write(templates.indexPage(tasks[0], tasks[1], task_to_edit, false, false, false, false, d))
+                                    res.end()
+                                })
+                                .catch(function(erro){
+                                    console.log(erro)
+                                })
+                        })
+                        .catch(function(erro){
+                            console.log(erro)
+                        })
                 }
                 else if(/\/deleteTask\/.*$/i.test(req.url)){
                     // Get aluno record
@@ -152,18 +136,49 @@ var alunosServer = http.createServer(function (req, res) {
                             getTasks()
                                 .then(tasks => {
                                     res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                                    res.write(templates.indexPage(tasks[0], tasks[1], false, false, true, d))
+                                    res.write(templates.indexPage(tasks[0], tasks[1], null, false, false, true, false, d))
                                     res.end()
                                 })
                                 .catch(function(erro){
                                     console.log(erro)
-                                })
+                                }) 
                         })
                         .catch(erro => {
                             console.log("Erro: " + erro)
 
                             res.writeHead(404, {'Content-Type': 'text/html;charset=utf-8'})
                             res.end('<p>Unable to delete record: ' + idTask)
+                        })
+                }
+                else if(/\/done\/.*$/i.test(req.url)){
+                    var idTask = req.url.split("/")[2]
+
+                    axios.get('http://localhost:3000/tasks/'+idTask)
+                        .then(resp1 => {
+                            var task = resp1.data
+                            task["done"] = "true"
+
+                            axios.put('http://localhost:3000/tasks/'+idTask, task)
+                                .then(resp2 => {
+                                    getTasks()
+                                        .then(tasks => {
+                                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                            res.write(templates.indexPage(tasks[0], tasks[1], null, false, false, true, false, d))
+                                            res.end()
+                                        })
+                                        .catch(function(erro){
+                                            console.log(erro)
+                                        }) 
+                                })
+                                .catch(erro => {
+                                    console.log("Erro: " + erro)
+        
+                                    res.writeHead(404, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.end('<p>Unable to delete record: ' + idTask)
+                                })
+                        })
+                        .catch(erro => {
+                            console.log(erro)
                         })
                 }
                 else{
@@ -174,56 +189,63 @@ var alunosServer = http.createServer(function (req, res) {
                 break
             case "POST":
                 if(req.url == '/insertTask'){
+                    console.log("------")
+                    console.log(req.data)
                     collectRequestBodyData(req, result => {
                         if(result){
                             axios.post("http://localhost:3000/tasks", result)
-                            .then(resp => {
-                                console.log(resp.data)
+                                .then(resp => {
+                                    console.log(resp.data)
+                                    
+                                    getTasks()
+                                        .then(tasks => {
+                                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                            res.write(templates.indexPage(tasks[0], tasks[1], null, false, true, false, false, d))
+                                            res.end()
+                                        })
+                                        .catch(function(erro){
+                                            console.log(erro)
+                                        }) 
+                                })
+                                .catch(error => {
+                                    console.log('Erro: '+ error)
 
-                                getTasks()
-                                    .then(tasks => {
-                                        res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write(templates.indexPage(already_done, to_be_done, false, true, false, d))
-                                        res.end()
-                                    })
-                                    .catch(function(erro){
-                                        console.log(erro)
-                                    })
-                            })
-                            .catch(error => {
-                                console.log('Erro: '+ error)
-
-                                res.writeHead(500, {'Content-Type': 'text/html;charset=utf-8'})
-                                res.write("<p>Unable to collect data from body...</p>")
-                                res.end()
-                            });
+                                    res.writeHead(500, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Unable to collect data from body...</p>")
+                                    res.end()  
+                                });
                         }
                         else{
                             res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
                             res.write("<p>Unable to collect data from body...</p>")
-                            res.end()
+                            res.end()  
                         }
                     })
                 }
                 else if(/\/editTask\/.*$/i.test(req.url)){
                     collectRequestBodyData(req, result => {
                         if(result){
-                            console.dir(result)
+                            console.log(result)
+                            axios.put("http://localhost:3000/tasks/" + result.id, result)
+                                .then(resp => {
+                                    console.log(resp)
 
-                            axios.put("http://localhost:3000/alunos/" + result.id, result)
-                            .then(resp => {
-                                console.log(resp.data)
+                                    getTasks()
+                                        .then(tasks => {
+                                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                            res.write(templates.indexPage(tasks[0], tasks[1], null, false, false, false, true, d))
+                                            res.end()
+                                        })
+                                        .catch(function(erro){
+                                            console.log(erro)
+                                        })  
+                                })
+                                .catch(error => {
+                                    console.log('Erro: '+ error)
 
-                                res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                                // res.write(studentFormPage(d))
-                                res.end('<p>Registo alterado' + JSON.stringify(resp.data) + '</p>')
-                            })
-                            .catch(error => {
-                                console.log('Erro: '+ error)
-
-                                res.writeHead(500, {'Content-Type': 'text/html;charset=utf-8'})
-                                res.end(templates.errorPage("Unable to insert record...", d))
-                            });
+                                    res.writeHead(500, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.end("<p>Unable to insert record</p>")  
+                                });
                         }
                         else{
                             res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
@@ -239,13 +261,13 @@ var alunosServer = http.createServer(function (req, res) {
                     res.end()
                 }
                 break
-            default:
+            default: 
                 res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
                 res.write("<p>" + req.method + " unsupported in this server.</p>")
                 res.end()
         }
     }
-
+    
 })
 
 alunosServer.listen(7777, ()=>{
