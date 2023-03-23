@@ -1,0 +1,51 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "João"
+    },
+    {
+      "id": "u2",
+      "name": "José"
+    },
+    {
+      "id": "u1",
+      "name": "Jaqueline"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t1",
+      "who": "u1",
+      "due_date": "2023-03-31",
+      "description": "Passar a EW",
+      "done": "1"
+    },
+    {
+      "id": "t3",
+      "who": "u2",
+      "due_date": "",
+      "description": "Passar a PL",
+      "done": "1"
+    },
+    {
+      "id": "t10",
+      "who": "u2",
+      "due_date": "2023-03-25",
+      "description": "Comprar Carro",
+      "done": "1"
+    },
+    {
+      "id": "t20",
+      "who": "u1",
+      "due_date": "2023-05-31",
+      "description": "Benfica campeão europeu"
+    },
+    {
+      "id": "3",
+      "who": "ola",
+      "dueDate": "2023-03-31",
+      "description": "qq coisa"
+    }
+  ]
+}

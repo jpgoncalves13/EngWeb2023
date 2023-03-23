@@ -1,0 +1,103 @@
+extends layout
+
+block content
+  header.w3-container.w3-center
+    h1
+      b Submit Task
+  div(style="display: flex; align-items: center;")          
+    form.w3-container.w3-card-4.w3-half.w3-round-large(style="display: inline-block; margin: auto;" method="POST" action="/")
+      p
+      label.w3-text-black.w3-center
+        b Id
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="id")
+      p
+      label.w3-text-black.w3-center
+        b Who
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="who")
+      p
+      label.w3-text-black.w3-center
+        b Due date
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="date" name="dueDate")
+      p
+      label.w3-text-black.w3-center
+        b Description
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="description")
+      p
+      button.w3-btn.w3-black.w3-round-large(type="submit") Add
+      p
+  header.w3-container.w3-center
+    h1
+      b Delete Task
+  div(style="display: flex; align-items: center;")          
+    form.w3-container.w3-card-4.w3-half.w3-round-large(style="display: inline-block; margin: auto;" method="POST" action="/delete")
+      p
+      label.w3-text-black.w3-center
+        b Id
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="id" value=deleteTask.id readonly)
+      p
+      label.w3-text-black.w3-center
+        b Who
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="who" value=deleteTask.who readonly)
+      p
+      label.w3-text-black.w3-center
+        b Due date
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="date" name="dueDate" value=deleteTask.dueDate readonly)
+      p
+      label.w3-text-black.w3-center
+        b Description
+      input.w3-input.w3-border.w3-light-blue.w3-round-large.w3-center(type="text" name="description" value=deleteTask.description readonly)
+      p
+      if deleteTask["done"]
+        label.w3-text-black.w3-center
+            b Done
+      else 
+        label.w3-text-black.w3-center
+            b Not Done
+      p
+      button.w3-btn.w3-red.w3-round-large.w3-margin-right(type="submit") Delete 
+      button.w3-btn.w3-black.w3-round-large 
+        a(href="/" style=" text-decoration: none;") Cancel
+      p   
+    
+  - var dones = []
+  - var notDones = []
+  each task in taskList 
+    if task["done"]
+      - dones.push(task)
+    else 
+      - notDones.push(task)
+
+  header.w3-container.w3-center
+    h1
+      b Tasks
+  table(style="width: 100%;")
+    tr
+      th(style="width: 50%;") To Do
+      th(style="width: 50%;") Concluded
+    tr
+      td.w3-container(valign="top")
+        div.w3-card-4.w3-round-large
+          ul.w3-ul.w3-hoverable
+            each task in notDones
+              li
+                table(style="width: 100%;")
+                  tr
+                    td(style="width: 70%;")= task.description
+                    td(style="width: 10%;") 
+                      a(href="/done/" + task.id) Done 
+                    td(style="width: 10%;")
+                      a(href="/edit/" + task.id) Edit
+                    td(style="width: 10%;")
+                      a(href="/delete/" + task.id) Delete
+      td.w3-container(valign="top")
+        div.w3-card-4.w3-round-large
+          ul.w3-ul.w3-hoverable
+            each task in dones
+              li
+                table(style="width: 100%;")
+                  tr 
+                    td(style="width: 80%;")= task.description
+                    td(style="width: 10%;")
+                      a.w3-margin(href="/undo/" + task.id) Undo 
+                    td(style="width: 10%;")
+                      a.w3-margin(href="/delete/" + task.id) Delete
