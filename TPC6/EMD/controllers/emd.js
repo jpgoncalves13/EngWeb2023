@@ -52,3 +52,39 @@ module.exports.deleteExame = id => {
                 return erro
             })
 }
+
+module.exports.getModalidades = () => {
+    return Exame
+            .distinct("modalidade")
+            .sort()
+            .then(resposta => {
+                return resposta
+            })
+            .catch(erro => {
+                return erro
+            })
+}
+
+module.exports.getAtletas = () => {
+    return Exame
+            .distinct("nome")
+            .sort()
+            .then(resposta => {
+                return resposta
+            })
+            .catch(erro => {
+                return erro
+            })
+}
+
+module.exports.getAptos = () => {
+    return Exame
+            .find({resultado: true})
+            .count()
+            .then(resposta => {
+                return resposta
+            })
+            .catch(erro => {
+                return erro
+            })
+}
