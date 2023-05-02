@@ -1,0 +1,38 @@
+//Queries 
+
+Q1 -> db.exames.countDocuments()
+300
+
+Q2 -> db.exames.countDocuments({ resultado: true })
+138
+
+Q3 -> db.exames.aggregate([ { $group: { _id: "$género", totalExames: { $count: {} } } }])
+[ { _id: 'F', totalExames: 142 }, { _id: 'M', totalExames: 158 } ]
+
+Q4 -> db.exames.aggregate([ { $group: { _id: "$modalidade", totalExames: { $count: {} } } }])
+[
+  { _id: 'Orientação', totalExames: 19 },
+  { _id: 'Karaté', totalExames: 15 },
+  { _id: 'Ténis', totalExames: 10 },
+  { _id: 'Esgrima', totalExames: 20 },
+  { _id: 'SUP', totalExames: 16 },
+  { _id: 'Badminton', totalExames: 21 },
+  { _id: 'Triatlo', totalExames: 23 },
+  { _id: 'Patinagem', totalExames: 18 },
+  { _id: 'BTT', totalExames: 18 },
+  { _id: 'Dança', totalExames: 17 },
+  { _id: 'Futebol', totalExames: 24 },
+  { _id: 'Equitação', totalExames: 13 },
+  { _id: 'Ciclismo', totalExames: 18 },
+  { _id: 'Parapente', totalExames: 19 },
+  { _id: 'Andebol', totalExames: 18 },
+  { _id: 'Basquetebol', totalExames: 13 },
+  { _id: 'Atletismo', totalExames: 18 }
+]
+
+Q5 -> db.exames.count({ clube: "GDGoma", federado: true })
+12
+
+Q6 -> db.exames.count({ género: "F", modalidade: "Triatlo" })
+9
+
